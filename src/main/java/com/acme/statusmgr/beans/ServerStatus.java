@@ -2,6 +2,9 @@ package com.acme.statusmgr.beans;
 
 import com.acme.servermgr.ServerManager;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * A POJO that represents Server Status and can be used to generate JSON for that status
  */
@@ -28,6 +31,14 @@ public class ServerStatus {
 
     public ServerStatus() {
 
+    }
+
+    public ServerStatus(long id, String contentHeader, List<String> details) {
+        this.id = id;
+        this.contentHeader = contentHeader;
+
+        // Obtain current status of server
+        this.statusDesc = Arrays.toString(details.toArray());
     }
 
     public long getId() {
