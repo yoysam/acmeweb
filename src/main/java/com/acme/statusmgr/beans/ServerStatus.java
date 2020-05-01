@@ -1,6 +1,6 @@
 package com.acme.statusmgr.beans;
 
-import com.acme.servermgr.ServerManager;
+import com.acme.servermgr.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ServerStatus {
         this.contentHeader = contentHeader;
 
         // Obtain current status of server
-        this.statusDesc = ServerManager.getCurrentServerStatus();
+        this.statusDesc=new ServerManager().returnstatus();
     }
 
     public ServerStatus() {
@@ -38,7 +38,22 @@ public class ServerStatus {
         this.contentHeader = contentHeader;
 
         // Obtain current status of server
-        this.statusDesc = Arrays.toString(details.toArray());
+        mangers Base= new ServerManager();
+        for (String s: details){
+            if(s.equalsIgnoreCase("operations")){
+                Base= new operationsmanger(Base);
+            }
+            else if(s.equalsIgnoreCase("memory")){
+                Base = new memorymanger(Base);
+            }
+            else if(s.equalsIgnoreCase("extensions")){
+                Base = new extentionmanger(Base);
+            }
+            else{
+                throw  new BadRequestException("Invalid details option:"+ s);
+            }
+        }
+        this.statusDesc = Base.returnstatus();
     }
 
     public long getId() {
