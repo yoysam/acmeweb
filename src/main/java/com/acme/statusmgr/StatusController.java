@@ -1,10 +1,14 @@
 package com.acme.statusmgr;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.acme.statusmgr.beans.ServerStatus;
+import com.acme.servermgr.BadRequestException;
+import com.acme.statusmgr.beans.Decoratorbase;
+import com.acme.statusmgr.decorators.ExtentionManger;
+import com.acme.statusmgr.decorators.basicdecorator;
+import com.acme.statusmgr.decorators.memorydecorator;
+import com.acme.statusmgr.decorators.operationsdecorator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,16 +41,45 @@ public class StatusController {
 
 
     @RequestMapping("/status")
-    public ServerStatus GenerateStatus(@RequestParam(value="name", defaultValue="Anonymous") String name ) {
+    public Decoratorbase GenerateStatus(@RequestParam(value="name", defaultValue="Anonymous") String name ) {
 
-        return new ServerStatus(counter.incrementAndGet(),
+        return new basicdecorator(counter.incrementAndGet(),
                 String.format(template, name)); }
-    @RequestMapping(value = "/status/detailed" , method = RequestMethod.GET)
-    public ServerStatus showServerStatusDetails (@RequestParam(value="details") List<String> details,
-                                                 @RequestParam(value="name",required = false, defaultValue="Anonymous") String name)  {
+    @RequestMapping(value = "/status/detailed", method = RequestMethod.GET)
+    public Decoratorbase showServerStatusDetails(@RequestParam(value = "details") List<String> details,
+                                                 @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name) throws BadRequestException {
         System.out.println("*** DEBUG INFO ***" + name + "  details=  " + details);
+        if (details == null) {
+            throw new BadRequestException("Required List parameter 'details' is not present\",\"path\":\"/server/status/detailed\"");
+        }
+        long id=counter.incrementAndGet();
+        String header= String.format(template,name);
 
-        return new ServerStatus(counter.incrementAndGet(),
-                String.format(template, name), details);
+        Decoratorbase base = new basicdecorator(id,header);
+
+        Decoratorbase decoratedBase = decorate(id,header,details,base);
+
+        return new Decoratorbase(id,header) {
+            @Override
+            public String getStatusDesc() {
+                return decoratedBase.getStatusDesc();
+            }
+        };
     }
-}
+
+    private Decoratorbase decorate(long id, String header, List<String> details, Decoratorbase base) {
+        for (String s : details) {
+            if (s.equalsIgnoreCase("operations")) {
+                base = new operationsdecorator(id,header,base);
+            } else if (s.equalsIgnoreCase("memory")) {
+                base = new memorydecorator(id,header,base);
+            } else if (s.equalsIgnoreCase("extensions")) {
+                base = new ExtentionManger(id,header,base);
+            } else {
+                throw new BadRequestException(s + " is not a valid details option");
+            }
+        }
+        return base;
+    }
+    }
+
