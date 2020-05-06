@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A POJO that represents Server Status and can be used to generate JSON for that status
  */
-public class ServerStatus {
+public abstract class Decoratorbase {
 
     private  long id;
     private String contentHeader;
@@ -21,7 +21,7 @@ public class ServerStatus {
      * @param id                a numeric identifier/counter of which request this
      * @param contentHeader     info about the request
      */
-    public ServerStatus(long id, String contentHeader) {
+    public Decoratorbase(long id, String contentHeader) {
         this.id = id;
         this.contentHeader = contentHeader;
 
@@ -29,32 +29,11 @@ public class ServerStatus {
         this.statusDesc=new ServerManager().returnstatus();
     }
 
-    public ServerStatus() {
+    public Decoratorbase() {
 
     }
 
-    public ServerStatus(long id, String contentHeader, List<String> details) {
-        this.id = id;
-        this.contentHeader = contentHeader;
 
-        // Obtain current status of server
-        mangers Base= new ServerManager();
-        for (String s: details){
-            if(s.equalsIgnoreCase("operations")){
-                Base= new operationsmanger(Base);
-            }
-            else if(s.equalsIgnoreCase("memory")){
-                Base = new memorymanger(Base);
-            }
-            else if(s.equalsIgnoreCase("extensions")){
-                Base = new extentionmanger(Base);
-            }
-            else{
-                throw  new BadRequestException("Invalid details option:"+ s);
-            }
-        }
-        this.statusDesc = Base.returnstatus();
-    }
 
     public long getId() {
         return id;
