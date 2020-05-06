@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.acme.servermgr.BadRequestException;
 import com.acme.statusmgr.beans.Decoratorbase;
-import com.acme.statusmgr.decorators.ExtentionManger;
+import com.acme.statusmgr.decorators.ExtentionDecorator;
 import com.acme.statusmgr.decorators.basicdecorator;
 import com.acme.statusmgr.decorators.memorydecorator;
 import com.acme.statusmgr.decorators.operationsdecorator;
@@ -59,22 +59,17 @@ public class StatusController {
 
         Decoratorbase decoratedBase = decorate(id,header,details,base);
 
-        return new Decoratorbase(id,header) {
-            @Override
-            public String getStatusDesc() {
-                return decoratedBase.getStatusDesc();
-            }
-        };
+        return decoratedBase;
     }
 
     private Decoratorbase decorate(long id, String header, List<String> details, Decoratorbase base) {
         for (String s : details) {
             if (s.equalsIgnoreCase("operations")) {
-                base = new operationsdecorator(id,header,base);
+                base = new operationsdecorator(base);
             } else if (s.equalsIgnoreCase("memory")) {
-                base = new memorydecorator(id,header,base);
+                base = new memorydecorator(base);
             } else if (s.equalsIgnoreCase("extensions")) {
-                base = new ExtentionManger(id,header,base);
+                base = new ExtentionDecorator(base);
             } else {
                 throw new BadRequestException(s + " is not a valid details option");
             }

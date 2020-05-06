@@ -5,19 +5,19 @@ import com.acme.statusmgr.beans.Decoratorbase;
 
 public class memorydecorator extends Decoratorbase {
     protected Decoratorbase base;
-    public memorydecorator(long id, String header, Decoratorbase base){
-        super(id,header);
+    public memorydecorator( Decoratorbase base){
+
         this.base=base;
     }
 
     @Override
     public long getId() {
-        return super.getId();
+        return base.getId();
     }
 
     @Override
     public String getContentHeader() {
-        return super.getContentHeader();
+        return base.getContentHeader();
     }
 
     @Override

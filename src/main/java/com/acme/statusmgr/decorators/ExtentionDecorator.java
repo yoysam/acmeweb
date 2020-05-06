@@ -3,21 +3,21 @@ package com.acme.statusmgr.decorators;
 import com.acme.servermgr.ServerManager;
 import com.acme.statusmgr.beans.Decoratorbase;
 
-public class ExtentionManger extends Decoratorbase {
+public class ExtentionDecorator extends Decoratorbase {
     protected Decoratorbase base;
-    public ExtentionManger (long id,String header, Decoratorbase base){
-        super(id,header);
+    public ExtentionDecorator( Decoratorbase base){
+
         this.base=base;
     }
 
     @Override
     public long getId() {
-        return super.getId();
+        return base.getId();
     }
 
     @Override
     public String getContentHeader() {
-        return super.getContentHeader();
+        return base.getContentHeader();
     }
 
     @Override

@@ -5,8 +5,8 @@ import com.acme.statusmgr.beans.Decoratorbase;
 
 public class operationsdecorator extends Decoratorbase {
     protected Decoratorbase base;
-    public operationsdecorator(long id, String header, Decoratorbase base){
-        super(id,header);
+    public operationsdecorator( Decoratorbase base){
+
         this.base=base;
     }
 
@@ -17,11 +17,11 @@ public class operationsdecorator extends Decoratorbase {
 
     @Override
     public long getId() {
-        return super.getId();
+        return base.getId();
     }
 
     @Override
     public String getContentHeader() {
-        return super.getContentHeader();
+        return base.getContentHeader();
     }
 }
