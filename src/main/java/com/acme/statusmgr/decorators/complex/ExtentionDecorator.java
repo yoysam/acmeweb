@@ -25,6 +25,6 @@ public class ExtentionDecorator extends Decoratorbase {
 
     @Override
     public String getStatusDesc() {
-       return base.getStatusDesc()+", and is using these extensions - " + ServerManager.getExtensions();
+       return base.getStatusDesc()+", and is using these extensions - " + super.serverManager.getExtensions();
     }
 }

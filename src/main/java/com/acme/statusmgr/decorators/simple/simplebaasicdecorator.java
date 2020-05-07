@@ -12,5 +12,5 @@ public class simplebaasicdecorator extends Decoratorbase {
     }
     @Override
     public String getStatusDesc() {
-        return ServerManager.returnstatus();
+        return super.serverManager.getCurrentServerStatus();
 }}

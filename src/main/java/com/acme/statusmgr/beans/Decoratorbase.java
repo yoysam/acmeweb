@@ -1,5 +1,6 @@
 package com.acme.statusmgr.beans;
 
+import com.acme.Application;
 import com.acme.servermgr.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -14,7 +15,10 @@ public abstract class Decoratorbase {
     private  long id;
     private String contentHeader;
     private String statusDesc = "Unknown";
-
+    /**
+     * This will refer to an instance of the ServerManager class (no longer static)
+     */
+    protected ServerManager serverManager;
     /**
      * Construct a ServerStatus using info passed in for identification, and obtaining current
      * server status from the appropriate Manager class.
@@ -27,12 +31,13 @@ public abstract class Decoratorbase {
         this.contentHeader = contentHeader;
 
         // Obtain current status of server
-        this.statusDesc=new ServerManager().returnstatus();
+        // Obtain and save reference to the ServerManager
+        serverManager = (ServerManager) Application.getApplicationContext().getBean("serverManager");
     }
+public Decoratorbase(){
 
-    public Decoratorbase() {
+}
 
-    }
 
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -47,7 +52,8 @@ public abstract class Decoratorbase {
 
 
     public String getStatusDesc() {
-        return statusDesc;
+        return serverManager.getCurrentServerStatus();
+
     }
 
 
