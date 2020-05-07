@@ -25,6 +25,6 @@ public class memorydecorator extends Decoratorbase {
 
     @Override
     public String getStatusDesc() {
-        return base.getStatusDesc()+ ", and its " + ServerManager.getMemory();
+        return base.getStatusDesc()+ ", and its " + super.serverManager.getMemory();
     }
 }

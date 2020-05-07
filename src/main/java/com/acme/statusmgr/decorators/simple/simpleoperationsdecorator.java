@@ -13,6 +13,6 @@ public class simpleoperationsdecorator extends Decoratorbase {
     }
     @Override
     public String getStatusDesc() {
-        return base.getStatusDesc()+ ", and " + ServerManager.getOperations();
+        return base.getStatusDesc()+ ", and " + super.serverManager.getOperations();
     }
 }
