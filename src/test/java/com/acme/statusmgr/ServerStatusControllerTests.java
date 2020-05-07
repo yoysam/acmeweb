@@ -102,5 +102,87 @@ public class ServerStatusControllerTests {
                 .andExpect(status().is4xxClientError());
 
     }
+    @Test
+    public void testWhenLevelIsInvalidException() throws Exception {
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "operations").param("levelOfDetail","foo")).andDo(print())
+                .andExpect(status().is4xxClientError());
 
+    }
+    @Test
+    public void testComplexDetailedOperations() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "operations").param("levelOfDetail","complex"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentHeader").value("Server Status requested by Anonymous"))
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and is operating normally"));
+    }
+    @Test
+    public void testComplexDetailedMemory() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "memory").param("levelOfDetail","complex"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentHeader").value("Server Status requested by Anonymous"))
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and its memory is Running low"));
+    }
+    @Test
+    public void testComplexDetailedExtensions() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "extensions").param("levelOfDetail","complex"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentHeader").value("Server Status requested by Anonymous"))
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and is using these extensions - [Hypervisor, Kubernetes, RAID-6]"));
+    }
+    @Test
+    public void testComplexDetailedAllDetails() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "operations,extensions,memory").param("levelOfDetail","complex"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentHeader").value("Server Status requested by Anonymous"))
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and is operating normally, and is using these extensions - [Hypervisor, Kubernetes, RAID-6], and its memory is Running low"));
+    }
+    @Test
+    public void testComplexDetailedAllDetailsAndName() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "operations,extensions,memory").param("levelOfDetail","complex")
+                .param("name", "Steven"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentHeader").value("Server Status requested by Steven"))
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and is operating normally, and is using these extensions - [Hypervisor, Kubernetes, RAID-6], and its memory is Running low"));
+    }
+    @Test
+    public void testSimpleDetailedOperations() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "operations").param("levelOfDetail","simple"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and is operating normally"));
+    }
+    @Test
+    public void testSimpleDetailedMemory() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "memory").param("levelOfDetail","simple"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and its memory is Running low"));
+    }
+    @Test
+    public void testSimpleDetailedExtensions() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "extensions").param("levelOfDetail","simple"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and is using these extensions - [Hypervisor, Kubernetes, RAID-6]"));
+    }
+    @Test
+    public void testSimpleDetailedAllDetails() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "operations,extensions,memory").param("levelOfDetail","simple"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and is operating normally, and is using these extensions - [Hypervisor, Kubernetes, RAID-6], and its memory is Running low"));
+    }
+    @Test
+    public void testSimpleDetailedAllDetailsAndName() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "operations,extensions,memory").param("levelOfDetail","simple")
+                .param("name", "Steven"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and is operating normally, and is using these extensions - [Hypervisor, Kubernetes, RAID-6], and its memory is Running low"));
+    }
 }
