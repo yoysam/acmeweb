@@ -1,11 +1,14 @@
-package com.acme.statusmgr.decorators;
+package com.acme.statusmgr.decorators.complex;
 
 import com.acme.servermgr.ServerManager;
 import com.acme.statusmgr.beans.Decoratorbase;
 
-public class ExtentionDecorator extends Decoratorbase {
+/**
+ * adds information about memory for the complex factory
+ */
+public class memorydecorator extends Decoratorbase {
     protected Decoratorbase base;
-    public ExtentionDecorator( Decoratorbase base){
+    public memorydecorator( Decoratorbase base){
 
         this.base=base;
     }
@@ -22,6 +25,6 @@ public class ExtentionDecorator extends Decoratorbase {
 
     @Override
     public String getStatusDesc() {
-       return base.getStatusDesc()+", and is using these extensions - " + ServerManager.getExtensions();
+        return base.getStatusDesc()+ ", and its " + ServerManager.getMemory();
     }
 }

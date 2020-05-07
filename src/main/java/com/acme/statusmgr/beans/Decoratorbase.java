@@ -1,6 +1,7 @@
 package com.acme.statusmgr.beans;
 
 import com.acme.servermgr.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +35,11 @@ public abstract class Decoratorbase {
     }
 
 
-
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public long getId() {
         return id;
     }
-
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getContentHeader() {
 
         return contentHeader;
